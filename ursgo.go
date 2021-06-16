@@ -86,6 +86,13 @@ func Tlds(v []string) Option {
 var (
 	v4    = "(?:25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]\\d|\\d)(?:\\.(?:25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]\\d|\\d)){3}"
 	v6seg = "[a-fA-F\\d]{1,4}"
+
+	replacer = strings.NewReplacer(
+		"\\u00a1", "\\x{00a1}",
+		"\\uffff", "\\x{ffff}",
+		"${v4}", v4,
+		"${v6seg}", v6seg,
+	)
 )
 
 func New(opts ...Option) (*regexp.Regexp, error) {
@@ -175,10 +182,7 @@ func New(opts ...Option) (*regexp.Regexp, error) {
 		regex = "(?i)" + regex
 	}
 
-	regex = strings.ReplaceAll(regex, "\\u00a1", "\\x{00a1}")
-	regex = strings.ReplaceAll(regex, "\\uffff", "\\x{ffff}")
-	regex = strings.ReplaceAll(regex, "${v4}", v4)
-	regex = strings.ReplaceAll(regex, "${v6seg}", v6seg)
+	regex = replacer.Replace(regex)
 
 	return regexp.Compile(regex)
 }
