@@ -4,6 +4,8 @@ import (
 	"regexp"
 	"sort"
 	"strings"
+
+	"github.com/mix3/tlds-go"
 )
 
 type option struct {
@@ -91,7 +93,7 @@ func New(opts ...Option) (*regexp.Regexp, error) {
 		localhost: true,
 		ipv4:      true,
 		ipv6:      true,
-		tlds:      tlds,
+		tlds:      tlds.List(),
 	}
 	for _, f := range opts {
 		f(opt)
