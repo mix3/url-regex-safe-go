@@ -1,4 +1,4 @@
-module github.com/mix3/ursgo
+module github.com/mix3/url-regex-safe-go
 
 go 1.16
 

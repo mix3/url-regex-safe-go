@@ -1,16 +1,16 @@
-package ursgo_test
+package urs_test
 
 import (
 	"regexp"
 	"strings"
 	"testing"
 
-	"github.com/mix3/ursgo"
+	urs "github.com/mix3/url-regex-safe-go"
 	"github.com/stretchr/testify/assert"
 )
 
-func New(opts ...ursgo.Option) *regexp.Regexp {
-	v, err := ursgo.New(opts...)
+func New(opts ...urs.Option) *regexp.Regexp {
+	v, err := urs.New(opts...)
 	if err != nil {
 		panic(err)
 	}
@@ -78,10 +78,10 @@ func TestUrlRegexSafe(t *testing.T) {
 		}
 
 		urs := New(
-			ursgo.Exact(true),
-			ursgo.Auth(true),
-			ursgo.Parens(true),
-			ursgo.TrailingPeriod(true),
+			urs.Exact(true),
+			urs.Auth(true),
+			urs.Parens(true),
+			urs.TrailingPeriod(true),
 		)
 		for _, f := range fixtures {
 			assert.True(t, urs.MatchString(f))
@@ -95,10 +95,10 @@ func TestUrlRegexSafe(t *testing.T) {
 			"http://例子.测试",
 		}
 		urs := New(
-			ursgo.Exact(true),
-			ursgo.Strict(true),
-			ursgo.Auth(true),
-			ursgo.Parens(true),
+			urs.Exact(true),
+			urs.Strict(true),
+			urs.Auth(true),
+			urs.Parens(true),
 		)
 		for _, f := range fixtures {
 			assert.True(t, urs.MatchString(f))
@@ -112,7 +112,7 @@ Lorem ipsum //dolor.sit
 <a href="http://example.com/with-path">with path</a>
 [and another](https://another.example.com) and`
 
-		got := New(ursgo.Strict(true)).FindAllString(fixture, -1)
+		got := New(urs.Strict(true)).FindAllString(fixture, -1)
 		want := []string{
 			"//bar.net/?q=Query",
 			"//dolor.sit",
@@ -166,7 +166,7 @@ Lorem ipsum //dolor.sit
 			"///www.foo.bar./",
 		}
 		urs := New(
-			ursgo.Exact(true),
+			urs.Exact(true),
 		)
 		for _, f := range fixtures {
 			assert.False(t, urs.MatchString(f))
@@ -175,8 +175,8 @@ Lorem ipsum //dolor.sit
 
 	t.Run("do not match URLs: foo.com", func(t *testing.T) {
 		assert.False(t, New(
-			ursgo.Exact(true),
-			ursgo.Strict(true),
+			urs.Exact(true),
+			urs.Strict(true),
 		).MatchString("foo.com"))
 	})
 
@@ -237,10 +237,10 @@ Lorem ipsum //dolor.sit
 		}
 
 		urs := New(
-			ursgo.Exact(true),
-			ursgo.Auth(true),
-			ursgo.Parens(true),
-			ursgo.TrailingPeriod(true),
+			urs.Exact(true),
+			urs.Auth(true),
+			urs.Parens(true),
+			urs.TrailingPeriod(true),
 		)
 		for _, f := range fixtures {
 			assert.True(t, urs.MatchString(f))
@@ -262,14 +262,14 @@ Lorem ipsum //dolor.sit
 		}
 
 		urs1 := New(
-			ursgo.Exact(true),
-			ursgo.Strict(true),
-			ursgo.Auth(false),
+			urs.Exact(true),
+			urs.Strict(true),
+			urs.Auth(false),
 		)
 		urs2 := New(
-			ursgo.Exact(true),
-			ursgo.Strict(true),
-			ursgo.Auth(false),
+			urs.Exact(true),
+			urs.Strict(true),
+			urs.Auth(false),
 		)
 		for _, f := range fixtures {
 			assert.False(t, urs1.MatchString(f))
@@ -290,9 +290,9 @@ bites http://userid@localhost:8080 the
 dust http://userid@localhost:8080/path`
 
 		assert.Nil(t, New(
-			ursgo.Exact(false),
-			ursgo.Strict(true),
-			ursgo.Auth(false),
+			urs.Exact(false),
+			urs.Strict(true),
+			urs.Auth(false),
 		).FindAllString(fixture, -1))
 
 		want := []string{
@@ -311,18 +311,18 @@ dust http://userid@localhost:8080/path`
 		}
 
 		assert.Equal(t, want, New(
-			ursgo.Exact(false),
-			ursgo.Strict(false),
+			urs.Exact(false),
+			urs.Strict(false),
 		).FindAllString(fixture, -1))
 
 		assert.Equal(t, want, New(
-			ursgo.Exact(false),
-			ursgo.Strict(false),
+			urs.Exact(false),
+			urs.Strict(false),
 		).FindAllString(strings.ReplaceAll(fixture, "http:", ""), -1))
 
 		assert.Equal(t, want, New(
-			ursgo.Exact(false),
-			ursgo.Strict(false),
+			urs.Exact(false),
+			urs.Strict(false),
 		).FindAllString(strings.ReplaceAll(fixture, "http://", ""), -1))
 	})
 
@@ -387,11 +387,11 @@ dust http://userid@localhost:8080/path`
 			"➡.ws/䨹",
 		}
 		urs := New(
-			ursgo.Exact(true),
-			ursgo.Auth(true),
-			ursgo.Parens(true),
-			ursgo.Tlds([]string{"com", "ws", "de", "net", "mp", "bar", "onion", "education"}),
-			ursgo.TrailingPeriod(true),
+			urs.Exact(true),
+			urs.Auth(true),
+			urs.Parens(true),
+			urs.Tlds([]string{"com", "ws", "de", "net", "mp", "bar", "onion", "education"}),
+			urs.TrailingPeriod(true),
 		)
 		for _, f := range fixtures {
 			assert.True(t, urs.MatchString(f))
@@ -447,10 +447,10 @@ dust http://userid@localhost:8080/path`
 			"➡.uk/䨹",
 		}
 		urs := New(
-			ursgo.Exact(true),
-			ursgo.Auth(true),
-			ursgo.Parens(true),
-			ursgo.Tlds([]string{"com", "ws", "de", "net", "mp", "bar"}),
+			urs.Exact(true),
+			urs.Auth(true),
+			urs.Parens(true),
+			urs.Tlds([]string{"com", "ws", "de", "net", "mp", "bar"}),
 		)
 		for _, f := range fixtures {
 			assert.False(t, urs.MatchString(f))
@@ -459,23 +459,23 @@ dust http://userid@localhost:8080/path`
 
 	t.Run("do not match URLs with non-strict mode", func(t *testing.T) {
 		assert.False(t, New(
-			ursgo.Exact(true),
-			ursgo.Auth(true),
-			ursgo.Parens(true),
+			urs.Exact(true),
+			urs.Auth(true),
+			urs.Parens(true),
 		).MatchString("018137.113.215.4074.138.129.172220.179.206.94180.213.144.175250.45.147.1364868726sgdm6nohQ"))
 	})
 
 	t.Run("IPv4", func(t *testing.T) {
 		assert.True(t, New().MatchString("1.1.1.1"))
 		assert.False(t, New(
-			ursgo.IPv4(false),
+			urs.IPv4(false),
 		).MatchString("1.1.1.1"))
 	})
 
 	t.Run("IPv6", func(t *testing.T) {
 		assert.True(t, New().MatchString("2606:4700:4700::1111"))
 		assert.False(t, New(
-			ursgo.IPv6(false),
+			urs.IPv6(false),
 		).MatchString("2606:4700:4700::1111"))
 	})
 
@@ -489,29 +489,29 @@ dust http://userid@localhost:8080/path`
 	t.Run("apostrophes", func(t *testing.T) {
 		assert.Equal(t, []string{"http://example.com/pic.jpg"}, New().FindAllString("background: url('http://example.com/pic.jpg');", -1))
 		assert.Equal(t, []string{"http://example.com/pic.jpg'"}, New(
-			ursgo.Apostrophes(true),
+			urs.Apostrophes(true),
 		).FindAllString("background: url('http://example.com/pic.jpg');", -1))
 		assert.Equal(t, []string{"http://example.com/pic.jpg');"}, New(
-			ursgo.Parens(true),
-			ursgo.Apostrophes(true),
+			urs.Parens(true),
+			urs.Apostrophes(true),
 		).FindAllString("background: url('http://example.com/pic.jpg');", -1))
 	})
 
 	t.Run("localhost", func(t *testing.T) {
 		assert.Equal(t, []string{"http://localhost/pic.jpg"}, New(
-			ursgo.Localhost(true),
+			urs.Localhost(true),
 		).FindAllString("background: url('http://localhost/pic.jpg');", -1))
 		assert.Equal(t, []string{"pic.jp"}, New(
-			ursgo.Localhost(false),
+			urs.Localhost(false),
 		).FindAllString("background: url('http://localhost/pic.jpg');", -1))
 	})
 
 	t.Run("trailing period", func(t *testing.T) {
 		assert.Equal(t, []string{"example.com.", "foobar.com"}, New(
-			ursgo.TrailingPeriod(true),
+			urs.TrailingPeriod(true),
 		).FindAllString("background example.com. foobar.com", -1))
 		assert.Equal(t, []string{"example.com", "foobar.com"}, New(
-			ursgo.TrailingPeriod(false),
+			urs.TrailingPeriod(false),
 		).FindAllString("background example.com. foobar.com", -1))
 	})
 }

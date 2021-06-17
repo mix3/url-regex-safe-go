@@ -1,4 +1,4 @@
-package ursgo
+package urs
 
 import (
 	"regexp"
